@@ -10,18 +10,13 @@ using UnityEngine.UI;
 
 public class combined : MonoBehaviour
 {
-    private const string client_id = "RXUwZCdXhtlMxPvUDNW5T7x8PJA3oLJ2";
-    private const string client_secret = "Rl51n6YC8YcAHMG5";
+    
 
     private ForgeLoader forgeLoader;
 
     public GameObject inputbucket;
     public GameObject inputfile;
-    public class token
-    {
-        public string access_token;
-    }
-    public token data;
+ 
     /// <summary>
     /// /////////////////////////////////////
     /// </summary>
@@ -80,46 +75,19 @@ public class combined : MonoBehaviour
         forgeLoader = FindObjectOfType<ForgeLoader>();
     }
 
-    public void click()
+
+    public void get(string access_token)
     {
+        acctoken = access_token;
+    }
+
+    public void click()
+    {      
         bucketName = inputbucket.GetComponent<Text>().text;
         fileName = inputfile.GetComponent<Text>().text;
-        StartCoroutine(Upload());
-    }
-    private IEnumerator Upload()
-    {
-        WWWForm form = new WWWForm();
-
-        form.AddField("client_id", client_id);
-        form.AddField("client_secret", client_secret);
-        form.AddField("grant_type", "client_credentials");
-        form.AddField("scope", "data:write data:read bucket:create bucket:delete");
-
-        UnityWebRequest www = UnityWebRequest.Post("https://developer.api.autodesk.com/authentication/v1/authenticate", form);
-        www.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError || www.isHttpError)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            data = JsonUtility.FromJson<token>(www.downloadHandler.text);
-            Debug.Log("completed 0");
-            acctoken = data.access_token;
-            click1();
-        }
-
-    }
-
-    public void click1()
-    {
-        
         StartCoroutine(Upload1());
     }
+   
 
     private IEnumerator Upload1()
     {
